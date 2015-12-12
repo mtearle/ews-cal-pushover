@@ -10,7 +10,6 @@ include Viewpoint::EWS
 
 require 'pushover'
 
-
 opts = Trollop::options do
     synopsis "A script to push events from EWS to Pushover"
     opt :config, "Name of configuration file", :default=>"config.yml"
@@ -32,28 +31,20 @@ Pushover.configure do |config|
   config.token=pushover_app_token
 end
 
-
 cli = Viewpoint::EWSClient.new endpoint, user, pass, server_version: SOAP::ExchangeWebService::VERSION_2007_SP1
 
 # see https://github.com/WinRb/Viewpoint/issues/184
 
-
 start_date = Time.now.to_datetime
 end_date = (Time.now + 60*opts[:minutes]).to_datetime
-
-p start_date
-p end_date
-
-#calendar = cli.get_folder(:calendar)
-#items = calendar.items_between sd, ed
 
 events = cli.find_items({:folder_id => :calendar, :calendar_view => {:start_date => start_date, :end_date => end_date}})
 
 events.each do |event|
-  #p event.subject
-  #p event
-  puts "#{event.start} - #{event.end}\t #{event.subject} #{event.location}"
-  Pushover.notification(message: event.subject, title: 'EWS-CAL', sound: pushover_sound)
+  thistime = Time.strptime(event.start.iso8601,"%Y-%m-%dT%H:%M:%S%z")
+  eventstarts = thistime.strftime("%a %R")
+  message = "#{eventstarts} #{event.subject} (#{event.location})"
+  Pushover.notification(message: message, title: 'EWS-CAL', sound: pushover_sound)
 end
 
 # see http://answer.io/p/ddacunha/Viewpoint
