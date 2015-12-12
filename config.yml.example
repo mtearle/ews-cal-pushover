@@ -1,7 +1,12 @@
 # config.yml.example
 # edit and copy to config.yml
 
+
 ews:
 	endpoint: 'https://exchange.server.example.com/ews/Exchange.asmx'
 	user: 'username'
 	pass: 'password'
+
+pushover:
+	user_token: "token"
+	app_token: "token"

@@ -8,6 +8,9 @@ require 'trollop'
 require 'viewpoint'
 include Viewpoint::EWS
 
+require 'pushover'
+
+
 opts = Trollop::options do
     synopsis "A script to push events from EWS to Pushover"
     opt :config, "Name of configuration file", :default=>"config.yml"
@@ -19,6 +22,15 @@ config = YAML.load_file(opts[:config])
 endpoint = config["ews"]["endpoint"]
 user = config["ews"]["user"]
 pass = config["ews"]["pass"]
+
+pushover_user_token = config["pushover"]["user_token"]
+pushover_app_token = config["pushover"]["app_token"]
+
+Pushover.configure do |config|
+  config.user=pushover_user_token
+  config.token=pushover_app_token
+end
+
 
 cli = Viewpoint::EWSClient.new endpoint, user, pass, server_version: SOAP::ExchangeWebService::VERSION_2007_SP1
 
@@ -40,6 +52,7 @@ events.each do |event|
 
   p event.subject
   puts "#{event.start} - #{event.end}\t #{event.subject}"
+  Pushover.notification(message: event.subject, title: 'EWS-CAL', sound: 'Bike')
 end
 
 # see http://answer.io/p/ddacunha/Viewpoint
