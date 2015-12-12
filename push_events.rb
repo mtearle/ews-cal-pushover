@@ -25,6 +25,7 @@ pass = config["ews"]["pass"]
 
 pushover_user_token = config["pushover"]["user_token"]
 pushover_app_token = config["pushover"]["app_token"]
+pushover_sound = config["pushover"]["sound"]
 
 Pushover.configure do |config|
   config.user=pushover_user_token
@@ -49,10 +50,10 @@ p end_date
 events = cli.find_items({:folder_id => :calendar, :calendar_view => {:start_date => start_date, :end_date => end_date}})
 
 events.each do |event|
-
-  p event.subject
-  puts "#{event.start} - #{event.end}\t #{event.subject}"
-  Pushover.notification(message: event.subject, title: 'EWS-CAL', sound: 'Bike')
+  #p event.subject
+  #p event
+  puts "#{event.start} - #{event.end}\t #{event.subject} #{event.location}"
+  Pushover.notification(message: event.subject, title: 'EWS-CAL', sound: pushover_sound)
 end
 
 # see http://answer.io/p/ddacunha/Viewpoint

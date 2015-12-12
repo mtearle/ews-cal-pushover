@@ -10,3 +10,4 @@ ews:
 pushover:
 	user_token: "token"
 	app_token: "token"
+	sound: "Bike"
