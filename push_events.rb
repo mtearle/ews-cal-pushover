@@ -43,10 +43,12 @@ end_date = (Time.now + 60*opts[:minutes]).to_datetime
 events = cli.find_items({:folder_id => :calendar, :calendar_view => {:start_date => start_date, :end_date => end_date}})
 
 events.each do |event|
-  thistime = Time.strptime(event.start.iso8601,"%Y-%m-%dT%H:%M:%S%z")
-  eventstarts = thistime.strftime("%a %R")
-  message = "#{eventstarts} #{event.subject} (#{event.location})"
-  Pushover.notification(message: message, title: 'EWS-CAL', sound: pushover_sound)
+  if event.start > start_date then
+	  thistime = Time.strptime(event.start.iso8601,"%Y-%m-%dT%H:%M:%S%z")
+	  eventstarts = thistime.strftime("%a %R")
+	  message = "#{eventstarts} #{event.subject} (#{event.location})"
+	  Pushover.notification(message: message, title: 'EWS-CAL', sound: pushover_sound)
+  end
 end
 
 # see http://answer.io/p/ddacunha/Viewpoint
