@@ -15,7 +15,6 @@ require 'pushover'
 opts = Trollop::options do
     synopsis "A script to push events from EWS to Pushover"
     opt :config, "Name of configuration file", :default=>"config.yml"
-    opt :minutes, "Number of minutes to look ahead for events", :type => :int, :default => 30   # integer 
 end
 
 config = YAML.load_file(opts[:config])
