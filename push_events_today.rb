@@ -42,8 +42,8 @@ cli = Viewpoint::EWSClient.new endpoint, user, pass, server_version: SOAP::Excha
 
 start_date = Date.today.to_time.to_datetime
 end_date = (start_date.to_time + 86399).to_datetime
-p start_date
-p end_date
+#p start_date
+#p end_date
 
 events = cli.find_items({:folder_id => :calendar, :calendar_view => {:start_date => start_date, :end_date => end_date}})
 
