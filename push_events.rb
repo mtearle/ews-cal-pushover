@@ -18,6 +18,10 @@ opts = Trollop::options do
     opt :minutes, "Number of minutes to look ahead for events", :type => :int, :default => 30   # integer 
 end
 
+if File.stat(opts[:config]).mode.to_s(8)[3..5] != "400" then
+    raise "#{opts[:config]} must be only readable by user"
+end
+
 config = YAML.load_file(opts[:config])
 
 endpoint = config["ews"]["endpoint"]

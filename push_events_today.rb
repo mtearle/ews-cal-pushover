@@ -17,6 +17,10 @@ opts = Trollop::options do
     opt :config, "Name of configuration file", :default=>"config.yml"
 end
 
+if File.stat(opts[:config]).mode.to_s(8)[3..5] != "400" then
+    raise "#{opts[:config]} must be only readable by user"
+end
+
 config = YAML.load_file(opts[:config])
 
 endpoint = config["ews"]["endpoint"]
